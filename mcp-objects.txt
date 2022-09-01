@@ -874,7 +874,7 @@
 0x0365 default_monitor_rule_mark
 0x0366 default_monitor_rule_dirty_cnt
 0x0367 default_monitor_rule_object_id
-0x0368 .data.rel.ro:001F10A0         dd offset unk_EB570
+0x0368 unk_EB570
 0x0369 default_monitor_rule_validate_commit
 0x036a default_monitor_rule_attributes
 0x036b license_blob
@@ -2682,7 +2682,7 @@
 0x0a75 gtm_pool_member_dirty_cnt
 0x0a76 gtm_pool_member_object_id
 0x0a77 gtm_pool_member_attributes
-0x0a78 .data.rel.ro:001F2CE0         dd offset unk_EF844
+0x0a78 unk_EF844
 0x0a79 gtm_pool_member_validate_commit
 0x0a7a gtm_pool
 0x0a7b gtm_pool_name
@@ -3652,9 +3652,9 @@
 0x0e3f gtm_rule_event_event_type
 0x0e40 gtm_rule_event_priority
 0x0e41 gtm_rule_event_script
-0x0e42 .data.rel.ro:001F3C08         dd offset unk_F1B14
-0x0e43 .data.rel.ro:001F3C0C         dd offset unk_F1B38
-0x0e44 .data.rel.ro:001F3C10         dd offset unk_F1B5C
+0x0e42 unk_F1B14
+0x0e43 unk_F1B38
+0x0e44 unk_F1B5C
 0x0e45 gtm_rule_event_object_id
 0x0e46 gtm_link_common_stat
 0x0e47 gtm_link_common_stat_rate
@@ -4518,7 +4518,7 @@
 0x11a1 cluster_status
 0x11a2 cluster_enabled
 0x11a3 cluster_current_primary_slot_id
-0x11a4 .data.rel.ro:001F4990         dd offset unk_7EA95
+0x11a4 unk_7EA95
 0x11a5 cluster_product
 0x11a6 cluster_version
 0x11a7 cluster_hotfix_ver
@@ -4689,7 +4689,7 @@
 0x124c composite_type_tags_name
 0x124d composite_type_tags_tag_value
 0x124e composite_type_tags_attr_tags
-0x124f .data.rel.ro:001F4C3C         dd offset unk_7F6B2
+0x124f unk_7F6B2
 0x1250 cfg_schema_module_module_id
 0x1251 cfg_schema_module_dependencies
 0x1252 cfg_schema_module_xml_doc
@@ -5285,7 +5285,7 @@
 0x14a0 remote_woc_max_connections
 0x14a1 remote_woc_version
 0x14a2 remote_woc_object_id
-0x14a3 .data.rel.ro:001F558C         dd offset unk_81D59
+0x14a3 unk_81D59
 0x14a4 remote_woc_subnet_woc_hostname
 0x14a5 remote_woc_subnet_subnet_addr
 0x14a6 remote_woc_subnet_subnet_netmask
@@ -7232,19 +7232,19 @@
 0x1c3b profile_access_stat_object_id
 0x1c3c profile_access_stat_config_sync_state
 0x1c3d profile_access_stat_total_sessions
-0x1c3e .data.rel.ro:001F73F8         dd offset unk_FEF70
-0x1c3f .data.rel.ro:001F73FC         dd offset unk_FEF9C
-0x1c40 .data.rel.ro:001F7400         dd offset unk_FEFE0
-0x1c41 .data.rel.ro:001F7404         dd offset unk_FF018
-0x1c42 .data.rel.ro:001F7408         dd offset unk_FF04C
-0x1c43 .data.rel.ro:001F740C         dd offset unk_FF084
-0x1c44 .data.rel.ro:001F7410         dd offset unk_FF0B0
-0x1c45 .data.rel.ro:001F7414         dd offset unk_FF0E0
-0x1c46 .data.rel.ro:001F7418         dd offset unk_FF110
-0x1c47 .data.rel.ro:001F741C         dd offset unk_FF140
-0x1c48 .data.rel.ro:001F7420         dd offset unk_FF170
-0x1c49 .data.rel.ro:001F7424         dd offset unk_FF1A0
-0x1c4a .data.rel.ro:001F7428         dd offset unk_FF1D4
+0x1c3e unk_FEF70
+0x1c3f unk_FEF9C
+0x1c40 unk_FEFE0
+0x1c41 unk_FF018
+0x1c42 unk_FF04C
+0x1c43 unk_FF084
+0x1c44 unk_FF0B0
+0x1c45 unk_FF0E0
+0x1c46 unk_FF110
+0x1c47 unk_FF140
+0x1c48 unk_FF170
+0x1c49 unk_FF1A0
+0x1c4a unk_FF1D4
 0x1c4b profile_access_stat_agent_ending_deny_t...
 0x1c4c profile_access_stat_agent_ending_deny_t...
 0x1c4d profile_access_stat_agent_ending_deny_t...
@@ -7793,7 +7793,7 @@
 0x1e6c connectivity_resource_group_connectivit...
 0x1e6d connectivity_resource_group_connectivit...
 0x1e6e connectivity_resource_group_connectivit...
-0x1e6f .data.rel.ro:001F7CBC         dd offset unk_10402C
+0x1e6f unk_10402C
 0x1e70 connectivity_resource_group_connectivit...
 0x1e71 connectivity_resource_network_access
 0x1e72 connectivity_resource_network_access_na...
@@ -8203,7 +8203,7 @@
 0x2006 client_traffic_classifier_entry_dst_ip
 0x2007 client_traffic_classifier_entry_dst_mas...
 0x2008 client_traffic_classifier_entry_dst_por...
-0x2009 .data.rel.ro:001F8324         dd offset unk_1069C0
+0x2009 unk_1069C0
 0x200a client_traffic_classifier_entry_client_...
 0x200b client_traffic_classifier_entry_object_...
 0x200c client_traffic_classifier_entry_partiti...
@@ -9031,8 +9031,8 @@
 0x2342 access_stat_apd_err_access_policy_inter...
 0x2343 access_stat_access_policy_result_allow
 0x2344 access_stat_access_policy_result_deny
-0x2345 .data.rel.ro:001F9014         dd offset unk_10C404
-0x2346 .data.rel.ro:001F9018         dd offset unk_10C434
+0x2345 unk_10C404
+0x2346 unk_10C434
 0x2347 trunk_mbr_ref
 0x2348 global_ppp_stat_tot_links
 0x2349 global_ppp_stat_cur_links
@@ -9052,7 +9052,7 @@
 0x2357 syslog_item_session_id
 0x2358 agent_ending_redirect_close_session
 0x2359 access_stat_access_policy_result_redire...
-0x235a .data.rel.ro:001F9068         dd offset unk_10C4C4
+0x235a unk_10C4C4
 0x235b agent_logging_log_message
 0x235c profile_access_logout_uri_include
 0x235d profile_access_logout_uri_timeout
@@ -10830,7 +10830,7 @@
 0x2a49 rule_proc_rule_name
 0x2a4a rule_proc_name
 0x2a4b rule_proc_args
-0x2a4c .data.rel.ro:001FAC30         dd offset unk_900A4
+0x2a4c unk_900A4
 0x2a4d rule_proc_app_id
 0x2a4e rule_proc_strict_app_updates
 0x2a4f self_ip_description
@@ -10899,7 +10899,7 @@
 0x2a8e ssl_key_monitor_param_pvalue
 0x2a8f ssl_key_monitor_param_partition_id
 0x2a90 ssl_key_monitor_param_app_id
-0x2a91 .data.rel.ro:001FAD44         dd offset unk_112EE4
+0x2a91 unk_112EE4
 0x2a92 stp_description
 0x2a93 stp_name
 0x2a94 stp_leaf_name
@@ -11177,7 +11177,7 @@
 0x2ba4 gtm_pool_member_description
 0x2ba5 gtm_pool_member_server_name
 0x2ba6 gtm_pool_member_app_id
-0x2ba7 .data.rel.ro:001FB19C         dd offset unk_1137B0
+0x2ba7 unk_1137B0
 0x2ba8 gtm_prober_pool
 0x2ba9 gtm_prober_pool_object_id
 0x2baa gtm_prober_pool_description
@@ -11449,54 +11449,54 @@
 0x2cb4 local_resources_t_printers
 0x2cb5 local_resources_t_com_ports
 0x2cb6 profile_access_stat_vs_name
-0x2cb7 .data.rel.ro:001FB5DC         dd offset unk_114674
-0x2cb8 .data.rel.ro:001FB5E0         dd offset unk_1146A8
-0x2cb9 .data.rel.ro:001FB5E4         dd offset unk_1146DC
-0x2cba .data.rel.ro:001FB5E8         dd offset unk_114710
-0x2cbb .data.rel.ro:001FB5EC         dd offset unk_114744
-0x2cbc .data.rel.ro:001FB5F0         dd offset unk_114778
-0x2cbd .data.rel.ro:001FB5F4         dd offset unk_1147B0
-0x2cbe .data.rel.ro:001FB5F8         dd offset unk_1147E8
-0x2cbf .data.rel.ro:001FB5FC         dd offset unk_11481C
-0x2cc0 .data.rel.ro:001FB600         dd offset unk_114854
-0x2cc1 .data.rel.ro:001FB604         dd offset unk_11488C
-0x2cc2 .data.rel.ro:001FB608         dd offset unk_1148C0
-0x2cc3 .data.rel.ro:001FB60C         dd offset unk_1148FC
-0x2cc4 .data.rel.ro:001FB610         dd offset unk_114930
-0x2cc5 .data.rel.ro:001FB614         dd offset unk_114960
-0x2cc6 .data.rel.ro:001FB618         dd offset unk_114994
-0x2cc7 .data.rel.ro:001FB61C         dd offset unk_1149C8
-0x2cc8 .data.rel.ro:001FB620         dd offset unk_1149F8
-0x2cc9 .data.rel.ro:001FB624         dd offset unk_114A30
-0x2cca .data.rel.ro:001FB628         dd offset unk_114A64
-0x2ccb .data.rel.ro:001FB62C         dd offset unk_114A94
-0x2ccc .data.rel.ro:001FB630         dd offset unk_114AC8
-0x2ccd .data.rel.ro:001FB634         dd offset unk_114AFC
-0x2cce .data.rel.ro:001FB638         dd offset unk_114B2C
-0x2ccf .data.rel.ro:001FB63C         dd offset unk_114B64
-0x2cd0 .data.rel.ro:001FB640         dd offset unk_114BA0
-0x2cd1 .data.rel.ro:001FB644         dd offset unk_114BD8
-0x2cd2 .data.rel.ro:001FB648         dd offset unk_114C14
-0x2cd3 .data.rel.ro:001FB64C         dd offset unk_114C4C
-0x2cd4 .data.rel.ro:001FB650         dd offset unk_114C84
-0x2cd5 .data.rel.ro:001FB654         dd offset unk_114CC0
-0x2cd6 .data.rel.ro:001FB658         dd offset unk_114CFC
-0x2cd7 .data.rel.ro:001FB65C         dd offset unk_114D34
-0x2cd8 .data.rel.ro:001FB660         dd offset unk_114D70
-0x2cd9 .data.rel.ro:001FB664         dd offset unk_114DAC
-0x2cda .data.rel.ro:001FB668         dd offset unk_114DE4
-0x2cdb .data.rel.ro:001FB66C         dd offset unk_114E24
-0x2cdc .data.rel.ro:001FB670         dd offset unk_114E64
-0x2cdd .data.rel.ro:001FB674         dd offset unk_114EA4
-0x2cde .data.rel.ro:001FB678         dd offset unk_114EE4
-0x2cdf .data.rel.ro:001FB67C         dd offset unk_114F24
-0x2ce0 .data.rel.ro:001FB680         dd offset unk_114F64
-0x2ce1 .data.rel.ro:001FB684         dd offset unk_114FA8
-0x2ce2 .data.rel.ro:001FB688         dd offset unk_114FE0
-0x2ce3 .data.rel.ro:001FB68C         dd offset unk_115014
-0x2ce4 .data.rel.ro:001FB690         dd offset unk_11504C
-0x2ce5 .data.rel.ro:001FB694         dd offset unk_115084
-0x2ce6 .data.rel.ro:001FB698         dd offset unk_1150B8
+0x2cb7 unk_114674
+0x2cb8 unk_1146A8
+0x2cb9 unk_1146DC
+0x2cba unk_114710
+0x2cbb unk_114744
+0x2cbc unk_114778
+0x2cbd unk_1147B0
+0x2cbe unk_1147E8
+0x2cbf unk_11481C
+0x2cc0 unk_114854
+0x2cc1 unk_11488C
+0x2cc2 unk_1148C0
+0x2cc3 unk_1148FC
+0x2cc4 unk_114930
+0x2cc5 unk_114960
+0x2cc6 unk_114994
+0x2cc7 unk_1149C8
+0x2cc8 unk_1149F8
+0x2cc9 unk_114A30
+0x2cca unk_114A64
+0x2ccb unk_114A94
+0x2ccc unk_114AC8
+0x2ccd unk_114AFC
+0x2cce unk_114B2C
+0x2ccf unk_114B64
+0x2cd0 unk_114BA0
+0x2cd1 unk_114BD8
+0x2cd2 unk_114C14
+0x2cd3 unk_114C4C
+0x2cd4 unk_114C84
+0x2cd5 unk_114CC0
+0x2cd6 unk_114CFC
+0x2cd7 unk_114D34
+0x2cd8 unk_114D70
+0x2cd9 unk_114DAC
+0x2cda unk_114DE4
+0x2cdb unk_114E24
+0x2cdc unk_114E64
+0x2cdd unk_114EA4
+0x2cde unk_114EE4
+0x2cdf unk_114F24
+0x2ce0 unk_114F64
+0x2ce1 unk_114FA8
+0x2ce2 unk_114FE0
+0x2ce3 unk_115014
+0x2ce4 unk_11504C
+0x2ce5 unk_115084
+0x2ce6 unk_1150B8
 0x2ce7 profile_connectivity_stat_vs_name
 0x2ce8 profile_remotedesktop_stat
 0x2ce9 profile_remotedesktop_stat_name
@@ -11553,7 +11553,7 @@
 0x2d1c aaa_crldp_server_leaf_name
 0x2d1d aaa_crldp_server_folder_name
 0x2d1e aaa_crldp_server_app_id
-0x2d1f .data.rel.ro:001FB77C         dd offset unk_115420
+0x2d1f unk_115420
 0x2d20 aaa_crldp_server_transaction_id
 0x2d21 aaa_http_server_description
 0x2d22 aaa_http_server_leaf_name
@@ -11605,7 +11605,7 @@
 0x2d50 aaa_ocsp_responder_vafile
 0x2d51 aaa_ocsp_responder_signer
 0x2d52 aaa_ocsp_responder_signkey
-0x2d53 .data.rel.ro:001FB84C         dd offset unk_115674
+0x2d53 unk_115674
 0x2d54 aaa_ocsp_responder_sign_other
 0x2d55 aaa_ocsp_responder_sign_digest
 0x2d56 aaa_ocsp_responder_certid_digest
@@ -11619,13 +11619,13 @@
 0x2d5e aaa_ocsp_responder_chain
 0x2d5f aaa_ocsp_responder_check_certs
 0x2d60 aaa_ocsp_responder_explicit_ocsp
-0x2d61 .data.rel.ro:001FB884         dd offset unk_115764
+0x2d61 unk_115764
 0x2d62 aaa_ocsp_responder_status_age
 0x2d63 aaa_ocsp_responder_partition_id
 0x2d64 aaa_ocsp_responder_leaf_name
 0x2d65 aaa_ocsp_responder_folder_name
 0x2d66 aaa_ocsp_responder_app_id
-0x2d67 .data.rel.ro:001FB89C         dd offset unk_1157C8
+0x2d67 unk_1157C8
 0x2d68 aaa_ocsp_responder_transaction_id
 0x2d69 aaa_radius_server_description
 0x2d6a aaa_radius_server_ha_pool_name
@@ -11635,7 +11635,7 @@
 0x2d6e aaa_radius_server_leaf_name
 0x2d6f aaa_radius_server_folder_name
 0x2d70 aaa_radius_server_app_id
-0x2d71 .data.rel.ro:001FB8C4         dd offset unk_115834
+0x2d71 unk_115834
 0x2d72 aaa_securid_server_leaf_name
 0x2d73 aaa_securid_server_folder_name
 0x2d74 aaa_securid_server_app_id
@@ -12412,7 +12412,7 @@
 0x3077 dynamic_security_association_folder_nam...
 0x3078 dynamic_security_association_app_id
 0x3079 dynamic_security_association_strict_app...
-0x307a .data.rel.ro:001FC4E8         dd offset unk_9442B
+0x307a unk_9442B
 0x307b ike_daemon_object_id
 0x307c ike_daemon_description
 0x307d ike_daemon_name
@@ -13683,9 +13683,9 @@
 0x356e cluster_packet_system_type
 0x356f asm_virtual_server_stat
 0x3570 asm_virtual_server_stat_name
-0x3571 .data.rel.ro:001FD8C4         dd offset unk_11FB48
-0x3572 .data.rel.ro:001FD8C8         dd offset unk_11FB7C
-0x3573 .data.rel.ro:001FD8CC         dd offset unk_11FBAC
+0x3571 unk_11FB48
+0x3572 unk_11FB7C
+0x3573 unk_11FBAC
 0x3574 app_template_action_checksum
 0x3575 app_template_action_signature
 0x3576 app_template_action_ignore_signature
@@ -13976,7 +13976,7 @@
 0x3693 gtm_pool_metadata_leaf_name
 0x3694 gtm_pool_metadata_folder_name
 0x3695 gtm_pool_metadata_app_id
-0x3696 .data.rel.ro:001FDD58         dd offset unk_120F64
+0x3696 unk_120F64
 0x3697 gtm_rule_metadata
 0x3698 gtm_rule_metadata_value
 0x3699 gtm_rule_metadata_persistent
@@ -13987,7 +13987,7 @@
 0x369e gtm_rule_metadata_leaf_name
 0x369f gtm_rule_metadata_folder_name
 0x36a0 gtm_rule_metadata_app_id
-0x36a1 .data.rel.ro:001FDD84         dd offset unk_120FCC
+0x36a1 unk_120FCC
 0x36a2 gtm_server_metadata
 0x36a3 gtm_server_metadata_value
 0x36a4 gtm_server_metadata_persistent
@@ -15268,7 +15268,7 @@
 0x3b9f log_filter_description
 0x3ba0 log_filter_name
 0x3ba1 log_filter_filter_partition
-0x3ba2 .data.rel.ro:001FF188         dd offset unk_9BA13
+0x3ba2 unk_9BA13
 0x3ba3 log_filter_filter_source
 0x3ba4 log_filter_filter_category
 0x3ba5 log_filter_filter_level
@@ -15906,30 +15906,30 @@
 0x3e1d global_vmwareview_stat_max_conns
 0x3e1e global_vmwareview_stat_rx_bytes
 0x3e1f global_vmwareview_stat_tx_bytes
-0x3e20 .data.rel.ro:001FFB80         dd offset unk_12D270
-0x3e21 .data.rel.ro:001FFB84         dd offset unk_12D2A8
-0x3e22 .data.rel.ro:001FFB88         dd offset unk_12D2DC
-0x3e23 .data.rel.ro:001FFB8C         dd offset unk_12D314
-0x3e24 .data.rel.ro:001FFB90         dd offset unk_12D34C
-0x3e25 .data.rel.ro:001FFB94         dd offset unk_12D380
-0x3e26 .data.rel.ro:001FFB98         dd offset unk_12D3BC
-0x3e27 .data.rel.ro:001FFB9C         dd offset unk_12D3EC
-0x3e28 .data.rel.ro:001FFBA0         dd offset unk_12D41C
-0x3e29 .data.rel.ro:001FFBA4         dd offset unk_12D44C
-0x3e2a .data.rel.ro:001FFBA8         dd offset unk_12D47C
-0x3e2b .data.rel.ro:001FFBAC         dd offset unk_12D4AC
-0x3e2c .data.rel.ro:001FFBB0         dd offset unk_12D4E0
-0x3e2d .data.rel.ro:001FFBB4         dd offset unk_12D518
-0x3e2e .data.rel.ro:001FFBB8         dd offset unk_12D54C
-0x3e2f .data.rel.ro:001FFBBC         dd offset unk_12D584
-0x3e30 .data.rel.ro:001FFBC0         dd offset unk_12D5BC
-0x3e31 .data.rel.ro:001FFBC4         dd offset unk_12D5F0
-0x3e32 .data.rel.ro:001FFBC8         dd offset unk_12D62C
-0x3e33 .data.rel.ro:001FFBCC         dd offset unk_12D664
-0x3e34 .data.rel.ro:001FFBD0         dd offset unk_12D698
-0x3e35 .data.rel.ro:001FFBD4         dd offset unk_12D6D0
-0x3e36 .data.rel.ro:001FFBD8         dd offset unk_12D704
-0x3e37 .data.rel.ro:001FFBDC         dd offset unk_12D738
+0x3e20 unk_12D270
+0x3e21 unk_12D2A8
+0x3e22 unk_12D2DC
+0x3e23 unk_12D314
+0x3e24 unk_12D34C
+0x3e25 unk_12D380
+0x3e26 unk_12D3BC
+0x3e27 unk_12D3EC
+0x3e28 unk_12D41C
+0x3e29 unk_12D44C
+0x3e2a unk_12D47C
+0x3e2b unk_12D4AC
+0x3e2c unk_12D4E0
+0x3e2d unk_12D518
+0x3e2e unk_12D54C
+0x3e2f unk_12D584
+0x3e30 unk_12D5BC
+0x3e31 unk_12D5F0
+0x3e32 unk_12D62C
+0x3e33 unk_12D664
+0x3e34 unk_12D698
+0x3e35 unk_12D6D0
+0x3e36 unk_12D704
+0x3e37 unk_12D738
 0x3e38 profile_vmwareview_stat
 0x3e39 profile_vmwareview_stat_name
 0x3e3a profile_vmwareview_stat_vs_name
@@ -18092,9 +18092,9 @@
 0x46a7 aaa_saml_server_saml_idp_connector_obje...
 0x46a8 aaa_saml_server_saml_idp_connector_idp_...
 0x46a9 aaa_saml_server_saml_idp_connector_aaa_...
-0x46aa .data.rel.ro:00201DA8         dd offset unk_13917C
+0x46aa unk_13917C
 0x46ab aaa_saml_server_saml_idp_connector_leaf...
-0x46ac .data.rel.ro:00201DB0         dd offset unk_1391DC
+0x46ac unk_1391DC
 0x46ad agent_logon_page_aaa_captcha_configurat...
 0x46ae policy_sync_history_default_ls_false_ob...
 0x46af profile_rewrite_java_crl
@@ -18102,7 +18102,7 @@
 0x46b1 saml_sso_config_saml_sp_connector_objec...
 0x46b2 saml_sso_config_saml_sp_connector_sp_co...
 0x46b3 saml_sso_config_saml_sp_connector_sso_c...
-0x46b4 .data.rel.ro:00201DD0         dd offset unk_139320
+0x46b4 unk_139320
 0x46b5 saml_sso_config_saml_sp_connector_leaf_...
 0x46b6 saml_sso_config_saml_sp_connector_folde...
 0x46b7 ike_peer_replay_window_size
@@ -18250,8 +18250,8 @@
 0x4745 pem_interception_endpoint_persistence
 0x4746 pem_interception_endpoint_partition_id
 0x4747 pem_interception_endpoint_leaf_name
-0x4748 .data.rel.ro:00202020 off_202020   dd offset aPemInterceptio_0
-0x4749 DATA XREF: .rodata:off_6D664↑o
+0x4748 unk_4748
+0x4749 unk_4749
 0x474a pem_interception_endpoint_folder_name
 0x474b pem_interception_endpoint_app_id
 0x474c pem_interception_endpoint_strict_app_up...
@@ -22487,7 +22487,7 @@
 0x57d2 swg_url_category_app_id
 0x57d3 swg_url_category_strict_app_updates
 0x57d4 swg_url_category_transaction_id
-0x57d5 .data.rel.ro:0020624C         dd offset unk_AE541
+0x57d5 unk_AE541
 0x57d6 url_download_result_object_id
 0x57d7 url_download_result_name
 0x57d8 url_download_result_db_version
@@ -25850,7 +25850,7 @@
 0x64f5 cli_user_data_shell
 0x64f6 cli_user_data_user_id
 0x64f7 cli_user_data_group_id
-0x64f8 .data.rel.ro:002096D8         dd offset unk_B60A7
+0x64f8 unk_B60A7
 0x64f9 cli_user_data_transaction_id
 0x64fa saml_attribute_t_multi_values
 0x64fb agent_category_lookup_reset_on_failure
@@ -26515,7 +26515,7 @@
 0x678e access_log_config_strict_app_updates
 0x678f access_log_config_transaction_id
 0x6790 access_policy_generation_id
-0x6791 .data.rel.ro:0020A13C         dd offset unk_B7A63
+0x6791 unk_B7A63
 0x6792 agent_aaa_mdm_add_device_object_id
 0x6793 agent_aaa_mdm_add_device_name
 0x6794 agent_aaa_mdm_add_device_server
@@ -28301,7 +28301,7 @@
 0x6e88 tacdb_customdb_name
 0x6e89 tacdb_customdb_location_url
 0x6e8a tacdb_customdb_poll_interval
-0x6e8b .data.rel.ro:0020BD24         dd offset unk_BB5D7
+0x6e8b unk_BB5D7
 0x6e8c tacdb_customdb_password
 0x6e8d tacdb_customdb_partition_id
 0x6e8e tacdb_customdb_leaf_name
@@ -36857,7 +36857,7 @@
 0x8ff4 base_cert_status_stat
 0x8ff5 base_cert_status_stat_good
 0x8ff6 base_cert_status_stat_revoked
-0x8ff7 .data.rel.ro:002142D4         dd offset unk_CD067
+0x8ff7 unk_CD067
 0x8ff8 base_connection_errors_stat
 0x8ff9 base_connection_errors_stat_http_errors
 0x8ffa base_connection_errors_stat_timeouts
@@ -38249,7 +38249,7 @@
 0x9564 fw_log_bot_defense_log_suspicious_brows...
 0x9565 fw_log_bot_defense_log_malicous_bot
 0x9566 fw_log_bot_defense_log_enabled_unknown
-0x9567 .data.rel.ro:00215894         dd offset unk_CF38C
+0x9567 unk_CF38C
 0x9568 fw_log_bot_defense_log_alarm
 0x9569 fw_log_bot_defense_log_captcha
 0x956a fw_log_bot_defense_log_rate_limit

