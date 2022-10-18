@@ -1,10 +1,22 @@
 require 'socket'
 require './mcp-parser'
 
-ME = "10.0.0.146"
-TARGET = "10.0.0.136"
-PORT1 = 1234
-PORT2 = 1235
+if ARGV.length < 2
+  puts "Usage: ruby ./mcp-mitm.rb <your ip> <target ip> [listen port 1] [listen port 2]"
+  puts
+  puts "Note: ensure that `ssh root@<target ip>` works without user input.."
+  puts "probably by setting up a password-less key. Sorry if that's annoying!"
+  puts
+  puts "Note2: this probably goes without saying, but this is semi-destructive"
+  puts "(at the very least, interrupty) and should not be used on a production"
+  puts "server (or any server you care about!)"
+  exit 1
+end
+
+ME = ARGV[0]
+TARGET = ARGV[1]
+PORT1 = ARGV[2] || 1234
+PORT2 = ARGV[3] || 1235
 DO_SETUP = true
 
 LISTENER1 = TCPServer.new(PORT1)

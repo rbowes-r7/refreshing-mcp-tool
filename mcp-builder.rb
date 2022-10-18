@@ -98,7 +98,8 @@ def create_root_account_plz(username, password_hash)
 end
 
 if __FILE__ == $0
-  create_root_account_plz("rontest", '$6$rbt6nUSRGCzIzoLX$r2nMhl25L74nu24kubAoztqSFbfadbv6qndI.5mEqZm/V/q/tnF.lRGyeBnjPsrAGx70CdfsvE/uyWbMFpqpt/')
+  # rontest / Password1
+  create_root_account_plz("rontest", '$6$T2mT4PeYSuyg/hSr$y/rN9tol5t1fRxTBqFVtxLzRfUBXt16yNahqYTaVVZa3PITfoAKBnuzqvwBT77qNBV4JjgwdhzqmsMk78bo6d0')
 end
 
 # Create a user

