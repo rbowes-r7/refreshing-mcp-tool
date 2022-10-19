@@ -96,14 +96,3 @@ def create_root_account_plz(username, password_hash)
     build('end_transaction', 'structure', [])
   )
 end
-
-if __FILE__ == $0
-  # rontest / Password1
-  create_root_account_plz("rontest", '$6$T2mT4PeYSuyg/hSr$y/rN9tol5t1fRxTBqFVtxLzRfUBXt16yNahqYTaVVZa3PITfoAKBnuzqvwBT77qNBV4JjgwdhzqmsMk78bo6d0')
-end
-
-# Create a user
-
-# create (structure):
-#  userdb_entry (structure):
-#   userdb_entry_name (string) = "anothertest"
