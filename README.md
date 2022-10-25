@@ -13,6 +13,7 @@ A quick summary of the scripts:
 * `mcp-parser.rb` - Parses mcp messages that arrive on stdin
 * `mcp-mitm.rb` - Eavesdrop mcp messages on a target host (requires passwordless ssh to root to be configured)
 * `mcp-builder.rb` - A library for building mcp messages (you don't need to use directly)
+* `mcp-generateobjects.rb` - A tool to generate mcp-objects.txt (you shouldn't need this)
 
 # What is mcp?
 
