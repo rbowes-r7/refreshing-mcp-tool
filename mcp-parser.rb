@@ -16,7 +16,6 @@ def parse(stream, depth = 0)
     while stream.length > 2
       tag, type, stream = stream.unpack('nna*')
 
-      # puts "%04x : %04x" % [tag, type]
       tag  = TAGS[tag]  || '<unknown tag>'
       type = TAGS[type] || '<unknown tag>'
 
